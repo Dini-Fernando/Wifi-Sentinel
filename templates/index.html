@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Wi-Fi Sentinel Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f7f7f7; padding: 20px; }
+        h1 { text-align: center; color: #333; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background-color: #fff; }
+        th, td { padding: 12px; border: 1px solid #ccc; text-align: center; }
+        th { background-color: #2c3e50; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        .btn { padding: 6px 14px; border: none; border-radius: 4px; cursor: pointer; }
+        .block { background-color: #e74c3c; color: white; }
+        .trust { background-color: #2ecc71; color: white; }
+        .unblock { background-color: #3498db; color: white; }
+    </style>
+</head>
+<body>
+    <h1>Wi-Fi Sentinel Dashboard</h1>
+    <table>
+        <tr>
+            <th>MAC Address</th>
+            <th>IP Address</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+        {% for device in devices %}
+        <tr>
+            <td>{{ device.mac }}</td>
+            <td>{{ device.ip }}</td>
+            <td>
+                {% if device.mac in trusted %}
+                    Trusted
+                {% elif device.mac in blocked %}
+                    Blocked
+                {% else %}
+                    Unknown
+                {% endif %}
+            </td>
+            <td>
+                {% if device.mac in blocked %}
+                    <a href="/unblock/{{ device.mac }}"><button class="btn unblock">Unblock</button></a>
+                {% elif device.mac in trusted %}
+                    <a href="/block/{{ device.mac }}"><button class="btn block">Block</button></a>
+                {% else %}
+                    <a href="/trust/{{ device.mac }}"><button class="btn trust">Trust</button></a>
+                    <a href="/block/{{ device.mac }}"><button class="btn block">Block</button></a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
+
